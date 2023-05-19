@@ -5,11 +5,9 @@ import com.seguridad.aplicacion.repositories.RepositorioAlumnos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +35,23 @@ public class AlumnoController {
         }
         else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("alumnos")
+    public ResponseEntity<Alumno> agregarAlumno(
+        @RequestBody Alumno nuevoAlumno
+    ){
+        try {
+            this.repoAlumnos.save(nuevoAlumno);
+            return ResponseEntity
+                    .created(new URI("alumnos/" + nuevoAlumno.getNumeroControl()))
+                    .body(nuevoAlumno);
+        }
+        catch (Exception ex) {
+            return ResponseEntity.status(400)
+                    .header("ERROR", ex.getMessage())
+                    .build();
         }
     }
 }
