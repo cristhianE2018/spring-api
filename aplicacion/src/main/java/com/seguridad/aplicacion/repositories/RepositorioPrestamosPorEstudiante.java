@@ -1,8 +1,7 @@
 package com.seguridad.aplicacion.repositories;
 
 
-import com.seguridad.aplicacion.models.PrestamosByEstudiante;
-import jakarta.persistence.Column;
+import com.seguridad.aplicacion.models.PrestamosPorEstudiante;
 import jakarta.persistence.ColumnResult;
 import jakarta.persistence.ConstructorResult;
 import jakarta.persistence.SqlResultSetMapping;
@@ -13,9 +12,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.Date;
 import java.util.List;
 @SqlResultSetMapping(
-        name = "PrestamoByEstudiante",
+        name = "PrestamoPorEstudiante",
         classes = @ConstructorResult(
-                targetClass = PrestamosByEstudiante.class,
+                targetClass = PrestamosPorEstudiante.class,
                 columns = {
                         @ColumnResult(name="id_prestamo",type = int.class),
                         @ColumnResult(name="titulo",type = String.class),
@@ -24,10 +23,10 @@ import java.util.List;
                 }
         )
 )
-public interface RepositorioPrestamo extends JpaRepository<PrestamosByEstudiante, Integer> {
+public interface RepositorioPrestamosPorEstudiante extends JpaRepository<PrestamosPorEstudiante, Integer> {
 
     @Query(value = "SELECT prestamos.id_prestamo, libros.titulo, prestamos.fecha_inicio, prestamos.fecha_fin" +
             " FROM prestamos INNER JOIN alumnos ON prestamos.estudiante = alumnos.numero_control " +
-            "INNER JOIN libros ON prestamos.libro = libros.codigo WHERE alumnos.numero_control = :numeroControl", nativeQuery = true)
-    public List<PrestamosByEstudiante> getPrestamosByEstudiante(@Param("numeroControl") String numeroControl);
+            "INNER JOIN libros ON prestamos.libro = libros.codigo WHERE alumnos.nombre like :nombre%", nativeQuery = true)
+    public List<PrestamosPorEstudiante> getPrestamosPorEstudiante(@Param("nombre") String nombre);
 }
